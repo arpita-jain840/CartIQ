@@ -1,6 +1,4 @@
-
 import pandas as pd
-import re
 from pathlib import Path
 
 # Project directory
@@ -35,29 +33,36 @@ for col in text_columns:
 # 4. Convert RAM into numerical GB
 df["ram_gb"] = (
     df["ram"]
-    .str.extract(r"(\d+(?:\.\d+)?)")[0]
-    .astype(float)
+    .str.replace("GB", "", regex=False)
+    .astype(int)
 )
 
-# 5. Convert weight into numerical KG
+# 5. Convert Weight into numerical KG
 df["weight_kg"] = (
     df["weight"]
-    .str.extract(r"(\d+(?:\.\d+)?)")[0]
+    .str.replace("kg", "", regex=False)
     .astype(float)
 )
 
 # 6. Extract screen resolution
-resolution = df["screenresolution"].str.extract(
-    r"(\d{3,5})x(\d{3,5})"
-)
+def get_resolution(value):
+    for part in str(value).split():
+        if "x" in part:
+            dimensions = part.split("x")
 
-df["resolution_width"] = pd.to_numeric(
-    resolution[0], errors="coerce"
-)
+            if len(dimensions) == 2:
+                try:
+                    return int(dimensions[0]), int(dimensions[1])
+                except ValueError:
+                    continue
 
-df["resolution_height"] = pd.to_numeric(
-    resolution[1], errors="coerce"
-)
+    return None, None
+
+
+resolution = df["screenresolution"].apply(get_resolution)
+
+df["resolution_width"] = resolution.apply(lambda x: x[0])
+df["resolution_height"] = resolution.apply(lambda x: x[1])
 
 # 7. Extract touchscreen information
 df["is_touchscreen"] = (
@@ -68,23 +73,27 @@ df["is_touchscreen"] = (
 
 # 8. Extract total storage in GB
 def convert_storage(value):
-    matches = re.findall(
-        r"(\d+(?:\.\d+)?)\s*(TB|GB)",
-        str(value),
-        re.IGNORECASE
-    )
-
     total = 0
 
-    for amount, unit in matches:
-        amount = float(amount)
+    parts = str(value).upper().replace("+", " ").split()
 
-        if unit.upper() == "TB":
-            total += amount * 1024
-        else:
-            total += amount
+    for part in parts:
+        if part.endswith("GB"):
+            amount = part.replace("GB", "")
+            try:
+                total += float(amount)
+            except ValueError:
+                continue
+
+        elif part.endswith("TB"):
+            amount = part.replace("TB", "")
+            try:
+                total += float(amount) * 1024
+            except ValueError:
+                continue
 
     return total
+
 
 df["storage_gb"] = df["memory"].apply(convert_storage)
 
@@ -105,9 +114,11 @@ OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 df.to_csv(OUTPUT_PATH, index=False)
 
+# 13. Generate cleaning report
 print("\n========== CARTIQ CLEANING REPORT ==========")
 
-print("\nDataset Shape:", df.shape)
+print("\nDataset Shape:")
+print(df.shape)
 
 print("\nNew Features:")
 print([
@@ -124,8 +135,11 @@ print([
 print("\nMissing Values:")
 print(df.isnull().sum())
 
-print("\nFinal Columns:")
-print(df.columns.tolist())
+print("\nData Types:")
+print(df.dtypes)
+
+print("\nFirst 5 Records:")
+print(df.head())
 
 print("\nProcessed Dataset Saved At:")
 print(OUTPUT_PATH)
