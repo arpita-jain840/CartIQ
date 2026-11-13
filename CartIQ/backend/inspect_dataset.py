@@ -48,4 +48,3 @@ print("\n7. Statistical Summary:")
 print(df.describe(include="all").T)
 
 print("\n========== REPORT COMPLETED ==========")
-print("\n========== CARTIQ DATASET INSPECTION COMPLETED ==========")
