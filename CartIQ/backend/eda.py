@@ -1,4 +1,5 @@
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
 
@@ -125,6 +126,30 @@ print(df.groupby("gpu_brand")["price_eur"].mean().sort_values(ascending=False))
 
 print("\n9. Average Price by Laptop Type:")
 print(df.groupby("typename")["price_eur"].mean().sort_values(ascending=False))
+
+correlation = df[
+    ["price_eur", "ram_gb", "storage_gb",
+     "weight_kg", "inches"]
+].corr()
+
+print(correlation)
+
+plt.figure(figsize=(10, 7))
+
+sns.heatmap(
+    correlation,
+    annot=True,
+    cmap="coolwarm",
+    fmt=".2f"
+)
+
+plt.title("CartIQ - Feature Correlation Heatmap")
+plt.tight_layout()
+
+plt.savefig(OUTPUT_DIR / "correlation_heatmap.png")
+plt.show()
+
+
 
 # Average Laptop Price by CPU Brand
 
