@@ -1,4 +1,3 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -127,10 +126,34 @@ print(df.groupby("gpu_brand")["price_eur"].mean().sort_values(ascending=False))
 print("\n9. Average Price by Laptop Type:")
 print(df.groupby("typename")["price_eur"].mean().sort_values(ascending=False))
 
-print("\n10. Correlation:")
-print(
-    df[["price_eur", "ram_gb", "storage_gb",
-        "weight_kg", "inches"]].corr()
-)
+# Average Laptop Price by CPU Brand
+
+cpu_price = df.groupby("cpu_brand")["price_eur"].mean().sort_values(ascending=False)
+
+plt.figure(figsize=(10, 5))
+cpu_price.plot(kind="bar", edgecolor="black")
+
+plt.title("Average Laptop Price by CPU Brand")
+plt.xlabel("CPU Brand")
+plt.ylabel("Average Price (Euro)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+
+# Average Laptop Price by GPU Brand
+
+gpu_price = df.groupby("gpu_brand")["price_eur"].mean().sort_values(ascending=False)
+
+plt.figure(figsize=(10, 5))
+gpu_price.plot(kind="bar", edgecolor="black")
+
+plt.title("Average Laptop Price by GPU Brand")
+plt.xlabel("GPU Brand")
+plt.ylabel("Average Price (Euro)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
 
 print("\n========== EDA COMPLETED ==========")
