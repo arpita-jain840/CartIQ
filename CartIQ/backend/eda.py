@@ -26,6 +26,8 @@ print(df.info())
 print("\n2. Price Statistics:")
 print(df["price_eur"].describe())
 
+
+
 # 3. Brand analysis
 print("\n3. Number of Laptops by Brand:")
 print(df["company"].value_counts())
@@ -179,6 +181,39 @@ plt.ylabel("Average Price (Euro)")
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
+
+
+# =====================================
+# FINAL DATASET INSPECTION
+# =====================================
+
+print("\n========== FINAL DATASET CHECK ==========")
+
+# 1. Dataset columns
+print("\n1. Dataset Columns:")
+print(df.columns.tolist())
+
+# 2. Data types
+print("\n2. Data Types:")
+print(df.dtypes)
+
+# 3. Missing values
+print("\n3. Missing Values:")
+print(df.isnull().sum())
+
+# 4. Duplicate records
+print("\n4. Duplicate Records:")
+print(df.duplicated().sum())
+
+# 5. Dataset shape
+print("\n5. Dataset Shape:")
+print(df.shape)
+
+# 6. Sample records
+print("\n6. Sample Records:")
+print(df.head())
+
+print("\n========== FINAL CHECK COMPLETED ==========")
 
 
 print("\n========== EDA COMPLETED ==========")
