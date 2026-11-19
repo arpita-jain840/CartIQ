@@ -1,25 +1,39 @@
 
 import pandas as pd
 import joblib
-from pathlib import Path
 
+from pathlib import Path
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+
+# Project directory
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_PATH = BASE_DIR / "data" / "processed" / "laptops_cleaned.csv"
+
+# Dataset path
+DATA_PATH = BASE_DIR / "data" / "processed" / "laptops_features.csv"
+
+# Model directory
 MODEL_DIR = BASE_DIR / "models"
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+# Load feature engineered dataset
+df = pd.read_csv(DATA_PATH)
+
 print("\n========== CARTIQ ML PREPROCESSING ==========")
+
+# 1. Select Numerical Features
 numerical_features = [
     "inches",
     "ram_gb",
-    "storge_gb",
+    "storage_gb",
     "weight_kg",
     "resolution_pixels",
     "aspect_ratio",
     "is_touchscreen"
 ]
+
+# 2. Select Categorical Features
 categorical_features = [
     "company",
     "typename",
@@ -28,12 +42,20 @@ categorical_features = [
     "gpu_brand",
     "storage_type"
 ]
-X = df[numerical_features + categorical_features]
-print("\n1. Input Dtaset Shape:")
-print(X.shape)
-numerical_transformer = StandardScaler()
-categorial_transformer = OneHotEncoder(handle_unknown="ignore")
 
+# 3. Prepare Input Data
+X = df[numerical_features + categorical_features]
+
+print("\n1. Input Dataset Shape:")
+print(X.shape)
+
+# 4. Numerical Preprocessing
+numerical_transformer = StandardScaler()
+
+# 5. Categorical Preprocessing
+categorical_transformer = OneHotEncoder(
+    handle_unknown="ignore"
+)
 
 # 6. Combine Both Transformers
 preprocessor = ColumnTransformer(
