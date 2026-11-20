@@ -89,13 +89,26 @@ feature_names = (
 )
 
 print(feature_names)
-
 # 9. Save Preprocessing Pipeline
 joblib.dump(
     preprocessing_pipeline,
     MODEL_DIR / "laptop_preprocessor.joblib"
 )
 
+# 10. Save Processed Feature Matrix
+joblib.dump(
+    X_processed,
+    MODEL_DIR / "laptop_features_matrix.joblib"
+)
+
+# 11. Save Laptop Product Information
+df.to_csv(
+    MODEL_DIR / "laptop_catalog.csv",
+    index=False
+)
+
 print("\nPreprocessing Pipeline Saved Successfully!")
+print("Processed Feature Matrix Saved Successfully!")
+print("Laptop Catalog Saved Successfully!")
 
 print("\n========== PREPROCESSING COMPLETED ==========")
