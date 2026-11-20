@@ -1,19 +1,27 @@
+
 import pandas as pd
-import joblib 
+import joblib
+
 from pathlib import Path
 from sklearn.neighbors import NearestNeighbors
+
+# 1. Project directory
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 2. Model directory
 MODEL_DIR = BASE_DIR / "models"
-features_matrix = joblib.load(MODEL_DIR / "laptop_features_matrix.joblib")
-laptop_catalog = pd.read_csv(MODEL_DIR / "laptop_catalog.csv")
+
+# 3. Load processed feature matrix
+features_matrix = joblib.load(
+    MODEL_DIR / "laptop_features_matrix.joblib"
+)
+
+# 4. Load laptop catalog
+laptop_catalog = pd.read_csv(
+    MODEL_DIR / "laptop_catalog.csv"
+)
+
 print("\n========== CARTIQ RECOMMENDATION ENGINE ==========")
-
-
-
-
-
-
-
 
 print("\nTotal laptops:", features_matrix.shape[0])
 print("Total features:", features_matrix.shape[1])
