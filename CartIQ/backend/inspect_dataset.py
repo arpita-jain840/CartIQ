@@ -17,6 +17,14 @@ try:
 except UnicodeDecodeError:
     df = pd.read_csv(DATA_PATH, encoding="latin1")
 
+# Euro to Indian Rupees Conversion
+EURO_TO_INR = 104
+
+df["Price_INR"] = (df["Price_euros"] * EURO_TO_INR).round(2)
+
+print("\nPrice Conversion (Euro to INR):")
+print(df[["Price_euros", "Price_INR"]].head())
+
 print("\n========== CARTIQ DATASET REPORT ==========")
 
 # Dataset dimensions
